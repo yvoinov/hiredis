@@ -392,6 +392,7 @@ int redisContextSetTimeout(redisContext *c, const struct timeval tv) {
         __redisSetError(c, REDIS_ERR_OOM, "Out of memory");
         return REDIS_ERR;
     }
+#if !defined(__sun__)
     if (setsockopt(c->fd,SOL_SOCKET,SO_RCVTIMEO,to_ptr,to_sz) == -1) {
         __redisSetErrorFromErrno(c,REDIS_ERR_IO,"setsockopt(SO_RCVTIMEO)");
         return REDIS_ERR;
@@ -400,6 +401,7 @@ int redisContextSetTimeout(redisContext *c, const struct timeval tv) {
         __redisSetErrorFromErrno(c,REDIS_ERR_IO,"setsockopt(SO_SNDTIMEO)");
         return REDIS_ERR;
     }
+#endif
     return REDIS_OK;
 }
 
